@@ -1,1 +1,89 @@
-<p>producer works!</p>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#operationModal">
+  Hozzáadás
+</button>
+
+<table class="table table-striped table-info">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Név</th>
+            <th>Ország</th>
+            <th>Alapítás éve</th>
+            <th>Kapacitas(hektár)</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(producer of producers; track producer.id){
+            <tr>
+                <td>{{ producer.id }}</td>
+                <td>{{ producer.name }}</td>
+                <td>{{ producer.country }}</td>
+                <td>{{ producer.yearOfFoundation }}</td>
+                <td>{{ producer.capacityHectare }}</td>
+                <td>
+                    <button class="btn btn-primary" (click)="editProducer(producer)"
+                    data-bs-toggle="modal" data-bs-target="#operationModal">
+                    Módosítás</button>
+                    <button class="btn btn-danger" (click)="deleteProducer(producer.id)">Törlés</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="operationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+            @if(addMode){
+                Hozzáadás
+            }@else {
+                Módosítás
+            }
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup] = "producerForm" (ngSubmit)="save()" id="producerForm">
+            @if (!addMode) {
+                <div>
+                    <label for="" class="form-label">ID</label>
+                    <input type="text" id="" formControlName="id" class="form-control">
+                </div>
+            }
+
+
+            <div>
+                <label for="" class="form-label">Név</label>
+                <input type="text" id="" formControlName="name" class="form-control">
+            </div>
+
+            <div>
+                <label for="" class="form-label">Ország</label>
+                <input type="text" id="" formControlName="country" class="form-control">
+            </div>
+
+            <div>
+                <label for="" class="form-label">Alapítás éve</label>
+                <input type="text" id="" formControlName="yearOfFoundation" class="form-control">
+            </div>
+
+            <div>
+                <label for="" class="form-label">Kapacitas(hektár)</label>
+                <input type="text" id="" formControlName="capacityHectare" class="form-control">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="producerForm" data-bs-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
