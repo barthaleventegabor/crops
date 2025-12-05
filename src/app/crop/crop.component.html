@@ -2,7 +2,7 @@
 
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-2" 
-data-bs-toggle="modal" data-bs-target="#operatorModal">
+(click)="setShowModal()">
     Hozzáadás
   </button>
 
@@ -21,13 +21,13 @@ data-bs-toggle="modal" data-bs-target="#operatorModal">
     <tbody>
         @for(crop of crops; track crop.id) {
             <tr>
-                <td>{{ crop.id }}</td>
-                <td>{{ crop.name }}</td>
-                <td>{{ crop.type }}</td>
-                <td>{{ crop.proteinContent }}</td>
-                <td>{{ crop.producerId }}</td>
+                <td data-column="Id">{{ crop.id }}</td>
+                <td data-column="Név">{{ crop.name }}</td>
+                <td data-column="Típus">{{ crop.type }}</td>
+                <td data-column="Fehérjetartalom">{{ crop.proteinContent }}</td>
+                <td data-column="Termelő">{{ crop.producerId }}</td>
                 <td>
-                    <button class="btn btn-primary" 
+                    <button class="btn btn-primary btn-sm" 
                     data-bs-toggle="modal" data-bs-target="#operatorModal"
                     (click)="startEditCrop(crop)"
                     >
@@ -35,7 +35,7 @@ data-bs-toggle="modal" data-bs-target="#operatorModal">
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-danger"
+                    <button class="btn btn-danger btn-sm"
                     (click)="startDeleteCrop(crop.id)">
                         Törlés
                     </button>
@@ -46,10 +46,11 @@ data-bs-toggle="modal" data-bs-target="#operatorModal">
 </table>
 
 
-
+@if(showModal){
   
   <!-- Modal -->
-  <div class="modal fade" id="operatorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade show" id="operatorModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+   aria-hidden="true" style="display: block">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -60,17 +61,19 @@ data-bs-toggle="modal" data-bs-target="#operatorModal">
                 Módosítás
             }
           </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" (click)="cancel()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           
 
             <form id="cropForm" [formGroup]="cropForm" (ngSubmit)="save()">
-                <div>
-                    <label for="id" class="form-label">Id</label>
-                    <input type="text" class="form-control"
-                    id="id" formControlName="id" readonly>
-                </div>
+                @if(!addMode){
+                    <div>
+                        <label for="id" class="form-label">Id</label>
+                        <input type="text" class="form-control"
+                        id="id" formControlName="id" readonly>
+                    </div>
+                }
                 <div>
                     <label for="name" class="form-label">Név</label>
                     <input type="text" class="form-control"
@@ -119,3 +122,8 @@ data-bs-toggle="modal" data-bs-target="#operatorModal">
       </div>
     </div>
   </div>
+
+  <div class="modal-backdrop fade show"></div>
+
+}
+

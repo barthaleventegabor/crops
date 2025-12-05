@@ -1,0 +1,17 @@
+@media screen and (max-width: 600px) {
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead th{
+    display: none;
+  }
+
+  td:before{
+    content: attr(data-clomun);
+    font-weight: bold;
+    float: left;
+    width: 40%;
+  }
+}

@@ -1,5 +1,6 @@
+<h1>Termelők</h1>
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#operationModal">
+<button type="button" class="btn btn-primary mb-2" (click)="setShowModal()">
   Hozzáadás
 </button>
 
@@ -13,21 +14,24 @@
             <th>Kapacitas(hektár)</th>
             <th></th>
             <th></th>
+
         </tr>
     </thead>
     <tbody>
         @for(producer of producers; track producer.id){
             <tr>
-                <td>{{ producer.id }}</td>
-                <td>{{ producer.name }}</td>
-                <td>{{ producer.country }}</td>
-                <td>{{ producer.yearOfFoundation }}</td>
-                <td>{{ producer.capacityHectare }}</td>
+                <td data-clomun="Id">{{ producer.id }}</td>
+                <td data-clomun="Név">{{ producer.name }}</td>
+                <td data-clomun="Ország">{{ producer.country }}</td>
+                <td data-clomun="Alapítás éve">{{ producer.yearOfFoundation }}</td>
+                <td data-clomun="Kapacitás(hektár)">{{ producer.capacityHectare }}</td>
                 <td>
-                    <button class="btn btn-primary" (click)="editProducer(producer)"
-                    data-bs-toggle="modal" data-bs-target="#operationModal">
+                    <button class="btn btn-primary btn-sm" (click)="editProducer(producer)"
+                     data-bs-target="#operationModal">
                     Módosítás</button>
-                    <button class="btn btn-danger" (click)="deleteProducer(producer.id)">Törlés</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger ms-2 btn-sm" (click)="startDeleteProducer(producer.id)">Törlés</button>
                 </td>
             </tr>
         }
@@ -36,54 +40,61 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="operationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">
-            @if(addMode){
-                Hozzáadás
-            }@else {
-                Módosítás
-            }
-        </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup] = "producerForm" (ngSubmit)="save()" id="producerForm">
-            @if (!addMode) {
+
+@if(showModal){
+    <div class="modal fade show" id="operationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                @if(addMode){
+                    Hozzáadás
+                }@else {
+                    Módosítás
+                }
+            </h1>
+            <button type="button" class="btn-close" (click)="cancel()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup] = "producerForm" (ngSubmit)="save()" id="producerForm">
+                @if (!addMode) {
+                    <div>
+                        <label for="" class="form-label">ID</label>
+                        <input type="text" id="" formControlName="id" class="form-control">
+                    </div>
+                }
+
+
                 <div>
-                    <label for="" class="form-label">ID</label>
-                    <input type="text" id="" formControlName="id" class="form-control">
+                    <label for="" class="form-label">Név</label>
+                    <input type="text" id="" formControlName="name" class="form-control">
                 </div>
-            }
 
+                <div>
+                    <label for="" class="form-label">Ország</label>
+                    <input type="text" id="" formControlName="country" class="form-control">
+                </div>
 
-            <div>
-                <label for="" class="form-label">Név</label>
-                <input type="text" id="" formControlName="name" class="form-control">
-            </div>
+                <div>
+                    <label for="" class="form-label">Alapítás éve</label>
+                    <input type="text" id="" formControlName="yearOfFoundation" class="form-control">
+                </div>
 
-            <div>
-                <label for="" class="form-label">Ország</label>
-                <input type="text" id="" formControlName="country" class="form-control">
-            </div>
-
-            <div>
-                <label for="" class="form-label">Alapítás éve</label>
-                <input type="text" id="" formControlName="yearOfFoundation" class="form-control">
-            </div>
-
-            <div>
-                <label for="" class="form-label">Kapacitas(hektár)</label>
-                <input type="text" id="" formControlName="capacityHectare" class="form-control">
-            </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="producerForm" data-bs-dismiss="modal">Save changes</button>
-      </div>
+                <div>
+                    <label for="" class="form-label">Kapacitas(hektár)</label>
+                    <input type="text" id="" formControlName="capacityHectare" class="form-control">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="cancel()">Close</button>
+            <button type="submit" class="btn btn-primary" form="producerForm" data-bs-dismiss="modal">Save changes</button>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+

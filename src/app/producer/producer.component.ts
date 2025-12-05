@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ProducerApi } from '../shared/producer-api';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { count } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-producer',
@@ -13,6 +14,7 @@ export class ProducerComponent {
   producers!: any
   producerForm: any
   addMode = true
+  showModal = false
   constructor(
     private api: ProducerApi,
     private builder: FormBuilder
@@ -58,6 +60,7 @@ export class ProducerComponent {
         this.addMode = true
         this.producerForm.reset()
         this.getProducers()
+        this.showModal = false
       },
       error: (err: any) => {
         console.log(err)
@@ -71,6 +74,7 @@ export class ProducerComponent {
       next: (res: any) => {
         console.log(res)
         this.addMode = true
+        this.showModal = false
         this.producerForm.reset()
         this.getProducers()
       },
@@ -82,8 +86,32 @@ export class ProducerComponent {
 
   editProducer(producer: any){
     console.log(producer)
+    this.showModal = true
     this.addMode = false
     this.producerForm.patchValue(producer)
+    
+  }
+
+  startDeleteProducer(id:number){
+    Swal.fire({
+      title: "Biztos vagy benne?",
+      text: "Nem lehet visszavonni!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Igen, törlöm!",
+      cancelButtonText : "Mégsem!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteProducer(id)
+        Swal.fire({
+          title: "Törölve!",
+          text: "A termelő törölve",
+          icon: "success"
+        });
+      }
+    });
   }
 
   deleteProducer(id:number){
@@ -96,6 +124,18 @@ export class ProducerComponent {
         console.log(err)
       }
     })
+  }
+
+
+
+  setShowModal(){
+    this.showModal = true
+  }
+
+  cancel(){
+    this.showModal = false
+    this.producerForm.reset()
+    this.addMode = true
   }
 
 }

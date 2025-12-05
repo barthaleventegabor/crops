@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CropApi } from '../shared/crop-api';
 import { ProducerApi } from '../shared/producer-api';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crop',
@@ -15,6 +16,7 @@ export class CropComponent {
   producers: any;
   addMode = true;
   cropForm: any;
+  showModal = false
 
   constructor(
     private cropApi: CropApi,
@@ -69,9 +71,29 @@ export class CropComponent {
         this.getCrops()
         this.cropForm.reset()
         console.log(res)
+        this.showModal = false
+        if(res.success){
+          Swal.fire({
+            title: "Létrehozva",
+            text: "A termény létrehozva",
+            icon: "success"
+          });
+        }else{
+          Swal.fire({
+            title: "A termény létrehozása sikertelen!",
+            text: "A termény nem lett létrehozva",
+            icon: "error"
+          });
+        }
+
       },
       error: (err: any) => {
         console.log(err)
+          Swal.fire({
+            title: "A termény létrehozása sikertelen!",
+            text: "A termény nem lett létrehozva",
+            icon: "error"
+          });
       }
     })
   }
@@ -84,31 +106,89 @@ export class CropComponent {
         this.cropForm.reset()
         console.log(res)
         this.addMode = true
+        this.showModal = false
+        if(res.success){
+          Swal.fire({
+            title: "Frissítve",
+            text: "A termény frissítve",
+            icon: "success"
+          });
+        }else{
+          Swal.fire({
+            title: "A termény frissítése sikertelen!",
+            text: "A termény nem lett frissítve",
+            icon: "error"
+          });
+        }
+        
       },
       error: (err: any) => {
         console.log(err)
+          Swal.fire({
+            title: "A termény frissítése sikertelen!",
+            text: "A termény nem lett frissítve",
+            icon: "error"
+          });
       }
     })
   }
 
   startEditCrop(crop: any) {
+    this.showModal = true
     this.addMode = false
     this.cropForm.patchValue(crop)
+
   }
 
-  startDeleteCrop(id: number) {
+  deleteCrop(id: number) {
     this.cropApi.deleteCrop(id).subscribe({
       next: (res: any) => {
         this.getCrops()
         console.log(res)
+        if(res.success){
+          Swal.fire({
+            title: "Törölve!",
+            text: "A termény törölve",
+            icon: "success"
+          });
+        }else{
+          Swal.fire({
+            title: "Törlés sikertelen!",
+            text: "A termény nem lett törölve",
+            icon: "error"
+          });
+        }
       },
       error: (err: any) => {
         console.log(err)
       }
     })
   }
+
+  startDeleteCrop(id:number){
+    Swal.fire({
+      title: "Biztos vagy benne?",
+      text: "Nem lehet visszavonni!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Igen, törlöm!",
+      cancelButtonText : "Mégsem!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteCrop(id)
+      }
+    });
+  }
+  
   cancel() {
     this.cropForm.reset()
     this.addMode = true
+    this.showModal = false
+  }
+
+  setShowModal(){
+    this.showModal = true
   }
 }
